@@ -1,0 +1,24 @@
+{
+  "name": "employee-tracker",
+  "version": "1.0.0",
+  "description": "Tracks employees information",
+  "main": "index.js",
+  "dependencies": {
+    "inquirer": "^7.3.3",
+    "mysql": "^2.18.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/JonGudenzi/Employee-Tracker.git"
+  },
+  "author": "Jon Gudenzi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/JonGudenzi/Employee-Tracker/issues"
+  },
+  "homepage": "https://github.com/JonGudenzi/Employee-Tracker#readme"
+}
