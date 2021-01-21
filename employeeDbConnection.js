@@ -11,12 +11,15 @@ const connection = mysql.createConnection({
     database: 'employee_tracker_db',
 });
 
-connection.query = util.promisify(connection.query);
+
 
 connection.connect((err) => {
     if (err) throw err;
     startQuestion();
+    console.log("SQL connected");
 });
+
+connection.query = util.promisify(connection.query);
 
 var startQuestion = async () => {
     try {
@@ -85,7 +88,9 @@ var addDepartment = async () => {
     var result = await connection.query("INSERT INTO departments SET ?", {
         dept_name: answer.departments
     });
+
     console.log("Your department has been added successfully!");
+    console.lot(answer.departments)
     startQuestion();
     }
     catch (err){
