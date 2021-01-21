@@ -1,4 +1,4 @@
-ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY ''
+ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '';
 
 DROP DATABASE IF EXISTS employee_tracker_db;
 CREATE DATABASE employee_tracker_db;
@@ -6,7 +6,7 @@ USE employee_tracker_db;
 
 CREATE TABLE departments(
 id INT AUTO_INCREMENT,
-name VARCHAR(30),
+dept_name VARCHAR(30) NOT NULL,
 PRIMARY KEY (id)
 );
 
@@ -27,5 +27,7 @@ manager_id INT,
 PRIMARY KEY(id)
 );
 
+INSERT INTO departments (dept_name)
+VALUES ("incense");
 
 SELECT * FROM departments;

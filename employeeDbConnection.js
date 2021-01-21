@@ -1,5 +1,6 @@
 const mysql = require('mysql');
 const inquirer = require('inquirer');
+var util = require("util");
 
 
 const connection = mysql.createConnection({
@@ -10,7 +11,7 @@ const connection = mysql.createConnection({
     database: 'employee_tracker_db',
 });
 
-// connection.query = util.promisify(connection.query);
+connection.query = util.promisify(connection.query);
 
 connection.connect((err) => {
     if (err) throw err;
@@ -20,8 +21,8 @@ connection.connect((err) => {
 var startQuestion = async () => {
     try {
         var answer = await inquirer.prompt({
-            type: 'list',
             name: 'task',
+            type: 'list',
             message: 'What would you like to do?',
             choices: [
                 'Add a department',
@@ -61,6 +62,33 @@ var startQuestion = async () => {
 
         }
     } catch (err) {
+        console.log(err);
+        startQuestion();
+    }
+}
+
+var addDepartment = async () => {
+    try {
+        var answer = await inquirer.prompt([{
+            name: "departments",
+            type: "input",
+            message: "What department would you like to add?",
+            validate: (value) => {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return false;
+            },
+        },
+
+    ]);
+    var result = await connection.query("INSERT INTO departments SET ?", {
+        dept_name: answer.departments
+    });
+    console.log("Your department has been added successfully!");
+    startQuestion();
+    }
+    catch (err){
         console.log(err);
         startQuestion();
     }
