@@ -158,7 +158,7 @@ var addEmployee = async () => {
                 if (isNaN(value) === false) {
                     return true;
                 }
-                return false;
+                return ("All IDs are number.  Please enter a number");
             },
         }
         ]);
@@ -198,7 +198,7 @@ var viewDepartments = async () => {
 
 var viewRoles = async () => {
     try {
-        var viewTable = await connection.query("SELECT * FROM role");
+        var viewTable = await connection.query("SELECT * FROM roles");
         console.table(viewTable);
 
         startQuestion();
@@ -213,8 +213,62 @@ var viewRoles = async () => {
 
 var viewEmployee = async () => {
     try {
-        var viewTable = await connection.query("SELECT * FROM employee");
+        var viewTable = await connection.query("SELECT * FROM employees");
         console.table(viewTable);
+
+        startQuestion();
+    }
+    catch (err) {
+        console.log(err);
+        startQuestion();
+    }
+}
+
+
+let employeesTable = connection.query("SELECT * FROM employees");
+
+let employeeRow = employeesTable.map((employeesTable)[
+    {
+    name: "employeeTable.first_name",
+    value: "employeeTable.id",
+}
+]);
+
+///////
+ addEmployeeRole = async () => {
+    try {
+        var answer = await inquirer.prompt([{
+            name: "name",
+            type: "choise",
+            message: "Please choose an employee",
+            choices: employeeRow,
+            
+        },
+        {
+            name: "last",
+            type: "input",
+            message: "What is the employee's LAST name?"
+        },
+        {
+            name: "id",
+            type: "input",
+            message: "What is the manager ID for this employee?",
+            validate: (value) => {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return ("All IDs are number.  Please enter a number");
+            },
+        }
+        ]);
+        var result = await connection.query("INSERT INTO employee SET ?", {
+            first_name: answer.first,
+            last_name: answer.last,
+            role_id: answer.id,
+            manager_id: answer.id
+        });
+
+        console.log("Your employee has been added successfully!");
 
         startQuestion();
     }
