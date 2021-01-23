@@ -240,7 +240,7 @@ updateEmployeeRole = async () => {
         var answer = await inquirer.prompt([
             {
                 name: "name",
-                type: "choise",
+                type: "choice",
                 message: "Please choose an employee",
                 choices: choicesArr
             }
