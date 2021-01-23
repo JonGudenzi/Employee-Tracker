@@ -160,6 +160,17 @@ var addEmployee = async () => {
                 }
                 return ("All IDs are number.  Please enter a number");
             },
+        },
+        {
+            name: "id",
+            type: "input",
+            message: "What is the manager ID for this employee?",
+            validate: (value) => {
+                if (isNaN(value) === false) {
+                    return true;
+                }
+                return ("All IDs are number.  Please enter a number");
+            },
         }
         ]);
         var result = await connection.query("INSERT INTO employees SET ?", {
@@ -232,21 +243,24 @@ updateEmployeeRole = async () => {
         var empRow = await connection.query("SELECT * FROM employees");
         var choicesArr = empRow.map((deptID) => {
             return {
-                name: deptID.first_name,
-                name: deptID.last_name,
+                name: deptID.first_name + " " + deptID.last_name,
                 value: deptID.id
             }
         })
+// console.log(choicesArr);
+
 
         var answer = await inquirer.prompt([
             {
-                name: "name",
+                name: "id",
                 type: "choice",
+                choices: choicesArr,
                 message: "Please choose an employee",
-                choices: choicesArr
+                
             }
         ]);
 
+       
 
         startQuestion();
     }
