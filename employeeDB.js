@@ -57,7 +57,7 @@ var startQuestion = async () => {
                 viewEmployee();
                 break;
             case "Update an employee's role":
-                addEmployeeRole();
+                updateEmployeeRole();
                 break;
             case "Exit":
                 exitApp();
@@ -71,7 +71,7 @@ var startQuestion = async () => {
         startQuestion();
     }
 }
-           //////ADD FUNCTIONS///////
+//////ADD FUNCTIONS///////
 ///////////funciton to add department/////////////
 var addDepartment = async () => {
     try {
@@ -106,7 +106,7 @@ var addDepartment = async () => {
 var addRole = async () => {
     try {
         var answer = await inquirer.prompt([{
-            name: "role",
+            name: "roles",
             type: "input",
             message: "What role would you like to add?"
         },
@@ -121,14 +121,14 @@ var addRole = async () => {
             message: "What is the department ID for this role?"
         }
         ]);
-        var result = await connection.query("INSERT INTO role SET ?", {
-            title: answer.role,
+        var result = await connection.query("INSERT INTO roles SET ?", {
+            title: answer.roles,
             salary: answer.salary,
             department_id: answer.id
         });
 
         console.log("Your role has been added successfully!");
-        // console.log(answer.role)
+        // console.log(answer.roles)
         startQuestion();
     }
     catch (err) {
@@ -162,7 +162,7 @@ var addEmployee = async () => {
             },
         }
         ]);
-        var result = await connection.query("INSERT INTO employee SET ?", {
+        var result = await connection.query("INSERT INTO employees SET ?", {
             first_name: answer.first,
             last_name: answer.last,
             role_id: answer.id,
@@ -179,7 +179,7 @@ var addEmployee = async () => {
     }
 }
 
-        //////VIEW FUNCTIONS///////
+//////VIEW FUNCTIONS///////
 //////function to view departments//////////
 var viewDepartments = async () => {
     try {
@@ -225,50 +225,27 @@ var viewEmployee = async () => {
 }
 
 
-let employeesTable = connection.query("SELECT * FROM employees");
-
-let employeeRow = employeesTable.map((employeesTable)[
-    {
-    name: "employeeTable.first_name",
-    value: "employeeTable.id",
-}
-]);
 
 ///////
- addEmployeeRole = async () => {
+updateEmployeeRole = async () => {
     try {
-        var answer = await inquirer.prompt([{
-            name: "name",
-            type: "choise",
-            message: "Please choose an employee",
-            choices: employeeRow,
-            
-        },
-        {
-            name: "last",
-            type: "input",
-            message: "What is the employee's LAST name?"
-        },
-        {
-            name: "id",
-            type: "input",
-            message: "What is the manager ID for this employee?",
-            validate: (value) => {
-                if (isNaN(value) === false) {
-                    return true;
-                }
-                return ("All IDs are number.  Please enter a number");
-            },
-        }
-        ]);
-        var result = await connection.query("INSERT INTO employee SET ?", {
-            first_name: answer.first,
-            last_name: answer.last,
-            role_id: answer.id,
-            manager_id: answer.id
-        });
+        var deptRow = await connection.query("SELECT * FROM departments");
+        var choicesArr = deptRow.map((deptID) => {
+            return {
+                name: deptID.department_name,
+                value: deptID.id
+            }
+        })
 
-        console.log("Your employee has been added successfully!");
+        var answer = await inquirer.prompt([
+            {
+                name: "name",
+                type: "choise",
+                message: "Please choose an employee",
+                choices: choicesArr
+            }
+        ]);
+
 
         startQuestion();
     }
