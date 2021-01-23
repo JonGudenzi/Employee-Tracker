@@ -229,10 +229,11 @@ var viewEmployee = async () => {
 ///////
 updateEmployeeRole = async () => {
     try {
-        var deptRow = await connection.query("SELECT * FROM departments");
-        var choicesArr = deptRow.map((deptID) => {
+        var empRow = await connection.query("SELECT * FROM employees");
+        var choicesArr = empRow.map((deptID) => {
             return {
-                name: deptID.department_name,
+                name: deptID.first_name,
+                name: deptID.last_name,
                 value: deptID.id
             }
         })
