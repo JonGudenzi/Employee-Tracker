@@ -235,7 +235,7 @@ var viewEmployee = async () => {
     }
 }
 
-///////
+///////updating employee roles/////////
 updateEmployeeRole = async () => {
     try {
         var empRow = await connection.query("SELECT * FROM employees");
@@ -252,13 +252,22 @@ debugger;
             {
                 name: "id",
                 type: "choice",
-                choices: choicesArr,
                 message: "Please choose an employee",
-            }
+                choices: choicesArr
+            },
+            {
+                name: "role",
+                type: "input",
+                message: "What would you like to change their role to?",
+            },
             
         ]);
 
-       
+        var result = await connection.query("UPDATE role_id FROM employees", {
+            id: answer.id,
+            role: answer.role_id,
+        });
+
 
         startQuestion();
     }
@@ -266,6 +275,12 @@ debugger;
         console.log(err);
         startQuestion();
     }
+}
+
+
+
+var exitApp = async () => {
+    console.log("Thank you for using the employee tracker database.  Type node employeeDB.js to use again");
 }
 
 
