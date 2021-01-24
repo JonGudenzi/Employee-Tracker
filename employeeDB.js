@@ -235,8 +235,6 @@ var viewEmployee = async () => {
     }
 }
 
-
-
 ///////
 updateEmployeeRole = async () => {
     try {
@@ -247,17 +245,17 @@ updateEmployeeRole = async () => {
                 value: deptID.id
             }
         })
-// console.log(choicesArr);
 
-
+console.log(choicesArr);
+debugger;
         var answer = await inquirer.prompt([
             {
                 name: "id",
                 type: "choice",
                 choices: choicesArr,
                 message: "Please choose an employee",
-                
             }
+            
         ]);
 
        
@@ -269,3 +267,7 @@ updateEmployeeRole = async () => {
         startQuestion();
     }
 }
+
+
+
+
