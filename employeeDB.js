@@ -92,8 +92,8 @@ var addDepartment = async () => {
             dept_name: answer.departments
         });
 
-        console.log("Your department has been added successfully!");
-        console.log(answer.departments)
+        console.log(`The department ${answer.departments} has been added successfully!`);
+        
         startQuestion();
     }
     catch (err) {
@@ -136,7 +136,7 @@ var addRole = async () => {
             department_id: answer.department
         });
 
-        console.log("The role " + `${answer.roles}` + " has been added successfully!");
+        console.log(`The role ${answer.roles} has been added successfully!`);
         // console.log(answer.roles)
         startQuestion();
     }
@@ -149,11 +149,11 @@ var addRole = async () => {
 //////////////function to add an employee////////////////
 var addEmployee = async () => {
     try {
-        var empRow = await connection.query("SELECT * FROM role");
+        var empRow = await connection.query("SELECT * FROM roles");
         var choicesArr = empRow.map((employeeRole) => {
           return {
             name: employeeRole.first_name + employeeRole.last_name,
-            value: employeeRole.id,
+            value: employeeRole.title,
           };
         });
 
