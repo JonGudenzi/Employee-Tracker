@@ -14,10 +14,14 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) throw err;
     startQuestion();
-    console.log("SQL connected");
 });
 
 connection.query = util.promisify(connection.query);
+
+console.table
+    ("---------------------------------",
+        "   WELCOME TO EMPLOYEE TRACKER   ",
+        "----------------------------------")
 
 var startQuestion = async () => {
     try {
@@ -70,21 +74,32 @@ var startQuestion = async () => {
         console.log(err);
         startQuestion();
     }
-}
+};
+
+//////Validation variable//////////
+const inputVal = (input) => {
+    if (input !== "") {
+        return true;
+    }
+    return "Please enter valid characters.";
+};
+
+const numVal = (input) => {
+    if (isNaN(input) === false) {
+        return true;
+    }
+    return "Please enter a number";
+};
+
 //////ADD FUNCTIONS///////
-///////////funciton to add department/////////////
+///////////function to add department/////////////
 var addDepartment = async () => {
     try {
         var answer = await inquirer.prompt([{
             name: "departments",
             type: "input",
             message: "What department would you like to add?",
-            validate: (value) => {
-                if ((value > 30) === false) {
-                    return true;
-                }
-                return false;
-            },
+            validate: inputVal
         },
 
         ]);
@@ -92,7 +107,10 @@ var addDepartment = async () => {
             dept_name: answer.departments
         });
 
-        console.log(`The department ${answer.departments} has been added successfully!`);
+        console.table
+            ("---------------------------",
+                `The department ${answer.departments} has been added successfully!`,
+                "---------------------------");
 
         startQuestion();
     }
@@ -116,12 +134,14 @@ var addRole = async () => {
         var answer = await inquirer.prompt([{
             name: "roles",
             type: "input",
-            message: "What role would you like to add?"
+            message: "What role would you like to add?",
+            validate: inputVal
         },
         {
             name: "salary",
             type: "input",
-            message: "What is the salary for this role?"
+            message: "What is the salary for this role?",
+            validate: numVal
         },
         {
             name: "department",
@@ -136,7 +156,10 @@ var addRole = async () => {
             department_id: answer.department
         });
 
-        console.log(`The role ${answer.roles} has been added successfully!`);
+        console.table
+            ("------------------",
+                `The role ${answer.roles} has been added successfully!`),
+            "-------------------";
         // console.log(answer.roles)
         startQuestion();
     }
@@ -147,15 +170,6 @@ var addRole = async () => {
 }
 
 //////////////function to add an employee////////////////
-
-// var empRow = await connection.query("SELECT * FROM employees");
-// var choicesArr = empRow.map((empName) => {
-//     return {
-//         name: empName.first_name + " " + empName.last_name,
-//         value: empName.id
-//     }
-// })
-/////////////////////
 
 var addEmployee = async () => {
     try {
@@ -175,15 +189,25 @@ var addEmployee = async () => {
             };
         });
 
+
+        if (managerArr.length === 0) {
+            managerArr = [{ name: "None", value: null }];
+        }
+
+        let noManager = managerArr;
+        noManager.push({ name: "None", value: null });
+
         var answer = await inquirer.prompt([{
             name: "first",
             type: "input",
-            message: "What is the employee's FIRST name?"
+            message: "What is the employee's FIRST name?",
+            validate: inputVal
         },
         {
             name: "last",
             type: "input",
-            message: "What is the employee's LAST name?"
+            message: "What is the employee's LAST name?",
+            validate: inputVal
         },
         {
             name: "role",
@@ -206,7 +230,10 @@ var addEmployee = async () => {
             manager_id: answer.manager_id
         });
 
-        console.log("Your employee has been added successfully!");
+        console.table
+        ("--------------",
+        `${answer.first + " " + answer.last}`, " has been added as an employee",
+        "---------------");
 
         startQuestion();
     }
@@ -221,7 +248,8 @@ var addEmployee = async () => {
 var viewDepartments = async () => {
     try {
         var viewTable = await connection.query("SELECT * FROM departments");
-        console.table(viewTable);
+        console.table
+        ("-----------------------", viewTable);
 
         startQuestion();
     }
@@ -236,7 +264,8 @@ var viewDepartments = async () => {
 var viewRoles = async () => {
     try {
         var viewTable = await connection.query("SELECT * FROM roles");
-        console.table(viewTable);
+        console.table
+        ("---------------------", viewTable);
 
         startQuestion();
     }
@@ -251,7 +280,8 @@ var viewRoles = async () => {
 var viewEmployee = async () => {
     try {
         var viewTable = await connection.query("SELECT * FROM employees");
-        console.table(viewTable);
+        console.table
+        ("----------------------------",viewTable);
 
         startQuestion();
     }
