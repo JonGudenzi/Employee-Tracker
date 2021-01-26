@@ -93,7 +93,7 @@ var addDepartment = async () => {
         });
 
         console.log(`The department ${answer.departments} has been added successfully!`);
-        
+
         startQuestion();
     }
     catch (err) {
@@ -106,10 +106,10 @@ var addDepartment = async () => {
 var addRole = async () => {
     var deptRow = await connection.query("SELECT * FROM departments");
     var choicesArr = deptRow.map((deptID) => {
-      return {
-        name: deptID.dept_name,
-        value: deptID.id,
-      };
+        return {
+            name: deptID.dept_name,
+            value: deptID.id,
+        };
     });
 
     try {
@@ -147,23 +147,33 @@ var addRole = async () => {
 }
 
 //////////////function to add an employee////////////////
+
+// var empRow = await connection.query("SELECT * FROM employees");
+// var choicesArr = empRow.map((empName) => {
+//     return {
+//         name: empName.first_name + " " + empName.last_name,
+//         value: empName.id
+//     }
+// })
+/////////////////////
+
 var addEmployee = async () => {
     try {
-        var empRow = await connection.query("SELECT * FROM roles");
-        var choicesArr = empRow.map((employeeRole) => {
-          return {
-            name: employeeRole.first_name + employeeRole.last_name,
-            value: employeeRole.title,
-          };
+        var roleRow = await connection.query("SELECT * FROM roles");
+        var choicesArr = roleRow.map((employeeRole) => {
+            return {
+                name: employeeRole.title,
+                value: employeeRole.id,
+            };
         });
 
         var managerInfo = await connection.query("SELECT * FROM employees");
-    var managerArr = managerInfo.map((empManager) => {
-      return {
-        name: empManager.first_name + empManager.last_name,
-        value: empManager.id,
-      };
-    });
+        var managerArr = managerInfo.map((manager) => {
+            return {
+                name: manager.first_name + " " + manager.last_name,
+                value: manager.id
+            };
+        });
 
         var answer = await inquirer.prompt([{
             name: "first",
@@ -182,17 +192,18 @@ var addEmployee = async () => {
             choices: choicesArr
         },
         {
-            name: "manager",
+            name: "manager_id",
             type: "list",
-            message: "Who is the employees manager?",
+            message: "Who is the manager of this employee?",
             choices: managerArr
         }
         ]);
         var result = await connection.query("INSERT INTO employees SET ?", {
+            id: answer.id,
             first_name: answer.first,
             last_name: answer.last,
             role_id: answer.role,
-            manager_id: answer.manager
+            manager_id: answer.manager_id
         });
 
         console.log("Your employee has been added successfully!");
@@ -249,22 +260,19 @@ var viewEmployee = async () => {
         startQuestion();
     }
 }
-
+///////UPDATING DATA///////////
 ///////updating employee roles/////////
 updateEmployeeRole = async () => {
     try {
         var empRow = await connection.query("SELECT * FROM employees");
-        var choicesArr = empRow.map((deptID) => {
+        var choicesArr = empRow.map((empName) => {
             return {
-                name: deptID.first_name + " " + deptID.last_name,
-                value: deptID.id
+                name: empName.first_name + " " + empName.last_name,
+                value: empName.id
             }
         })
-        
 
-console.log(choicesArr);
-debugger;
-        var answer = await inquirer.prompt([
+        var empAnswer = await inquirer.prompt([
             {
                 name: "name",
                 type: "list",
@@ -272,24 +280,33 @@ debugger;
                 choices: choicesArr
             },
         ]);
-
-        var result = await connection.query("", {
-            first_name: answer.first,
-            last_name: answer.last,
-            role_id: answer.id,
-            
+        var roleRow = await connection.query("SELECT * FROM roles)");
+        var roleChoicesArr = roleRow.map((emloyeeRole) => {
+            return {
+                name: employeeRole.title,
+                value: employeeRole.id,
+            }
         });
+        
+        var roleAnswer = await inquirer.prompt([
+            {
+                name: "role_id",
+                type: "list",
+                choices: roleChoicesArr,
+                message: "Please choose a new role"
+            }
+        ])
 
+        var result = await connection.query(`UPDATE employees SET ? WHERE ?`, [{ role_id: roleAnswer.role_id }, { id: employeeAnswer.employee_id }]);
+        console.log("The role has been updated!");
+        startProgram();
 
-        startQuestion();
     }
     catch (err) {
         console.log(err);
         startQuestion();
     }
-}
-
-
+};
 
 var exitApp = async () => {
     connection.end();
