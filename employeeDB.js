@@ -268,7 +268,7 @@ updateEmployeeRole = async () => {
         var choicesArr = empRow.map((empName) => {
             return {
                 name: empName.first_name + " " + empName.last_name,
-                value: empName.id
+                value: empName.id,
             }
         })
 
@@ -277,17 +277,17 @@ updateEmployeeRole = async () => {
                 name: "name",
                 type: "list",
                 message: "Please choose an employee",
-                choices: choicesArr
+                choices: choicesArr,
             },
         ]);
-        var roleRow = await connection.query("SELECT * FROM roles)");
-        var roleChoicesArr = roleRow.map((emloyeeRole) => {
+        var roleRow = await connection.query("SELECT * FROM roles");
+        var roleChoicesArr = roleRow.map((employeeRole) => {
             return {
                 name: employeeRole.title,
                 value: employeeRole.id,
             }
         });
-        
+
         var roleAnswer = await inquirer.prompt([
             {
                 name: "role_id",
@@ -297,9 +297,9 @@ updateEmployeeRole = async () => {
             }
         ])
 
-        var result = await connection.query(`UPDATE employees SET ? WHERE ?`, [{ role_id: roleAnswer.role_id }, { id: employeeAnswer.employee_id }]);
+        var result = await connection.query(`UPDATE employees SET ? WHERE ?`, [{ role_id: roleAnswer.role_id }, { id: empAnswer.employee_id }]);
         console.log("The role has been updated!");
-        startProgram();
+        startQuestion();
 
     }
     catch (err) {
